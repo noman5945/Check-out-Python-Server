@@ -117,4 +117,4 @@ def printLists(rests):
 #Searching
 #search_rest_by_name("Takeout")
 #search_rest_by_location("Gulshan")
-search_by_location_price("Mohammedpur",450,600,["Nachos"])
+search_by_location_price("Dhanmondi",450,600,["Shakes"])
