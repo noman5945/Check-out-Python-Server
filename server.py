@@ -1,7 +1,9 @@
+import pymongo
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from dotenv import load_dotenv,find_dotenv
 import os
+import pprint
 
 load_dotenv(find_dotenv())
 #Get password fron .env file
@@ -95,26 +97,43 @@ def search_rest_by_name(name):
     list_of_rests=list(rests)
     print(list_of_rests)
 
+def create_index():
+    restaurant_collection.create_index([('location',pymongo.ASCENDING),('lowestPrice',pymongo.ASCENDING)],name='loc_lowprice')
+    pprint.pprint(restaurant_collection.index_information())
+
+
 #This function searches and gives data given the price range location and the food keys 
 def search_by_location_price(loc,lowprice,highprice,food_keys):
-    query={"location":loc,
-        "lowestPrice":{'$lte':lowprice},
-        "highestPrice":{'$gte':highprice},
-        "mainFoods":{'$in':food_keys}
-        }
-    rests=restaurant_collection.find(query)
-    
-    list_of_rests=list(rests)
-    printLists(list_of_rests)
+    try:
+        query={"location":loc,
+            "lowestPrice":{'$lte':lowprice},
+            "highestPrice":{'$gte':highprice},
+            "mainFoods":{'$in':food_keys}
+            }
+        rests=restaurant_collection.find(query)
+        pprint.pprint(restaurant_collection.find(query).explain()['executionStats'])
+        #.explain("executionStats")
+        list_of_rests=list(rests)
+        printLists(list_of_rests)
+    except Exception as e:
+        print(e)
+
 
 def printLists(rests):
     for rest in rests:
         print(rest['name'])
-#Inserting Restaurants
-#insert_one_restaurent(rest_data_struct)
-#insert_many_restaurents(rest_data_struct)
 
-#Searching
-#search_rest_by_name("Takeout")
-#search_rest_by_location("Gulshan")
-search_by_location_price("Mohammedpur",200,600,["Fries"])
+try:
+    #Inserting Restaurants
+    #insert_one_restaurent(rest_data_struct)
+    #insert_many_restaurents(rest_data_struct)
+    #create_index()
+
+    #Searching
+    #search_rest_by_name("Takeout")
+    #search_rest_by_location("Gulshan")
+
+    search_by_location_price("Dhanmondi",200,1000,["Fries","Shakes"])
+    client.close()
+except Exception as e:
+    print(e)
