@@ -133,7 +133,7 @@ try:
     #search_rest_by_name("Takeout")
     #search_rest_by_location("Gulshan")
 
-    search_by_location_price("Dhanmondi",200,1000,["Fries","Shakes"])
+    search_by_location_price("Mohammedpur",350,1000,["Fries","Shakes"])
     client.close()
 except Exception as e:
     print(e)
